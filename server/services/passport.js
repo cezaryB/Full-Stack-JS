@@ -5,6 +5,19 @@ const keys = require('../config/keys')
 
 const User = mongoose.model('users')
 
+passport.serializeUser((user, done) => {
+  done(null, user.id)
+})
+
+passport.deserializeUser((id, done) => {
+  User.findById(id)
+    .then(user => {
+      if (user) done(null, user)
+      return done(null, false)
+    })
+    .catch(err => done(err, false))
+})
+
 const googleOptions = {
   clientID: keys.googleClientID,
   clientSecret: keys.googleClientSecret,
