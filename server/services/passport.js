@@ -11,26 +11,23 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id)
-    .then(user => {
-      if (user) done(null, user)
-      return done(null, false)
-    })
-    .catch(err => done(err, false))
+    .then(user => done(null, user))
 })
 
 const googleOptions = {
   clientID: keys.googleClientID,
   clientSecret: keys.googleClientSecret,
-  callbackURL: '/auth/google/callback'
+  callbackURL: '/auth/google/callback',
+  proxy: true
 }
 
 const googleLogin =  new GoogleStrategy(googleOptions, (accessToken, refreshToken, profile, done) => {
-  User.findOne({ googleId: profile.id})
+  User.findOne({ socialId: profile.id})
     .then(user => {
       if (user) {
         return done(null, user)
       }
-      new User({ googleId: profile.id })
+      new User({ socialId: profile.id })
         .save()
         .then(user => done(null, user))
         .catch(err => done(err, false))
@@ -41,3 +38,4 @@ const googleLogin =  new GoogleStrategy(googleOptions, (accessToken, refreshToke
 })
 
 passport.use(googleLogin)
+

@@ -4,6 +4,10 @@ const googleAuth = passport.authenticate('google', {
   scope: ['profile', 'email']
 })
 
+const facebookAuth = passport.authenticate('facebook', {
+  scope: ['email', 'public_profile']
+})
+
 module.exports = app => {
 
   app.get('/', (req, res, next) => {
@@ -13,6 +17,15 @@ module.exports = app => {
   app.get('/auth/google', googleAuth)
 
   app.get('/auth/google/callback', passport.authenticate('google'))
+
+  app.get('/auth/facebook', facebookAuth)
+
+  app.get('/auth/facebook/callback', passport.authenticate('facebook'))
+
+  app.get('/api/logout', (req, res) => {
+    req.logout()
+    res.send({ message: 'You are logged out'})
+  })
 
   app.get('/api/current_user', (req, res, next) => {
     res.send(req.user)
