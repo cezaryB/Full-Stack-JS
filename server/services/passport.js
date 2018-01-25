@@ -21,20 +21,13 @@ const googleOptions = {
   proxy: true
 }
 
-const googleLogin =  new GoogleStrategy(googleOptions, (accessToken, refreshToken, profile, done) => {
-  User.findOne({ socialId: profile.id})
-    .then(user => {
-      if (user) {
-        return done(null, user)
-      }
-      new User({ socialId: profile.id })
-        .save()
-        .then(user => done(null, user))
-        .catch(err => done(err, false))
-    })
-    .catch(err => {
-      return done(err, false)
-    })
+const googleLogin =  new GoogleStrategy(googleOptions, async (accessToken, refreshToken, profile, done) => {
+  const existingUser = await User.findOne({ socialId: profile.id })
+  if (existingUser) {
+    return done(null, user)
+  }
+  const user = await new User({ socialId: profile.id }).save()
+  done(null, user)
 })
 
 passport.use(googleLogin)
