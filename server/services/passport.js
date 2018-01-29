@@ -22,12 +22,17 @@ const googleOptions = {
 }
 
 const googleLogin =  new GoogleStrategy(googleOptions, async (accessToken, refreshToken, profile, done) => {
-  const existingUser = await User.findOne({ socialId: profile.id })
-  if (existingUser) {
-    return done(null, user)
+  try {
+    const existingUser = await User.findOne({ socialId: profile.id })
+    if (existingUser) {
+      return done(null, user)
+    }
+    const user = await new User({ socialId: profile.id }).save()
+    done(null, user)
   }
-  const user = await new User({ socialId: profile.id }).save()
-  done(null, user)
+  catch (err) {
+    return done(err, false)
+  }
 })
 
 passport.use(googleLogin)
