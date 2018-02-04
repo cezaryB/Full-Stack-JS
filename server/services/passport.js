@@ -25,7 +25,7 @@ const googleLogin =  new GoogleStrategy(googleOptions, async (accessToken, refre
   try {
     const existingUser = await User.findOne({ socialId: profile.id })
     if (existingUser) {
-      return done(null, user)
+      return done(null, existingUser)
     }
     const user = await new User({ socialId: profile.id }).save()
     done(null, user)

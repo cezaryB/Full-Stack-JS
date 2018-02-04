@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchUser } from '../actions'
+import * as actions from '../actions'
 import Header from './Header'
 
 const Dashboard = () => <h2>Dashboard</h2>
@@ -10,6 +10,9 @@ const Landing = (props) => <h2>Landing</h2>
 
 
 class App extends Component {
+  componentDidMount() {
+    this.props.fetchUser()
+  }
   render() {
     return (
       <div className='container'>
@@ -28,8 +31,8 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    loggedIn: state.loggedIn
+    authentication: state.authentication
   }
 }
 
-export default connect(mapStateToProps, { fetchUser })(App)
+export default connect(mapStateToProps, actions)(App)

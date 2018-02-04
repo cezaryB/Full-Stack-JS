@@ -16,7 +16,9 @@ module.exports = app => {
 
   app.get('/auth/google', googleAuth)
 
-  app.get('/auth/google/callback', passport.authenticate('google'))
+  app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
+    res.redirect('/surveys')
+  })
 
   app.get('/auth/facebook', facebookAuth)
 
