@@ -22,6 +22,9 @@ class Header extends Component {
             <li>
               <Payments />
             </li>
+            <li style={{ margin: '0 10px' }}>
+              You have: {this.props.authentication.credits} credits
+            </li>
             <li>
               <a href='/api/logout'>Logout</a>
             </li>
@@ -31,6 +34,7 @@ class Header extends Component {
   }
   render() {
     const redirectRoute = this.props.authentication ? '/survey' : '/'
+    console.log(this.props.authentication)
     return (
       <nav>
         <div className='nav-wrapper'>
